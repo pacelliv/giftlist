@@ -1,26 +1,66 @@
-# Gift List
+## Week 2 project - GiftList 🎁
 
-To get started with the repository, clone it and then run `npm install` in the top-level directory to install the depedencies.
+### Introduction
 
-There are three folders in this repository:
+Merkle Trees are data structures used to efficiently stored and proof that a piece of data is part of a larger set of data without the need of knowing all the pieces of data.
 
-## Client
+```
+      ABCDEFGH <-- Merkle Root
+       /    \
+    ABCD     EFGH
+    / \      / \
+   AB  CD   EF  GH
+  / \  / \  / \ / \
+  A B  C D  E F G H
+```
 
-You can run the client from the top-level directory with `node client/index`. This file is a script which will send an HTTP request to the server.
+The bottom layer contains all the data in the tree, and they're hashed in pairs to produce a single hash known as the root that represents all the data.
 
-Think of the client as the _prover_ here. It needs to prove to the server that some `name` is in the `MERKLE_ROOT` on the server. 
+If we wanted to proof that `C` is part of the tree, we would only need to know `D`, `AB` and `EFGH` to produce `CD`, `ABCD` and `ABCDEFGH` then we compare our result with the expected root.
 
-## Server
+```
+      ABCDEFGH <-- Merkle Root
+       /    \
+    ABCD     EFGH
+    / \      / \
+   AB   CD    -   -
+  / \  / \  / \ / \
+  - -  C D  - - - -
+```
 
-You can run the server from the top-level directory with `node server/index`. This file is an express server which will be hosted on port 1225 and respond to the client's request.
+In this project we need to build an application that gives out gifts, but only to the names that are in the list.
 
-Think of the server as the _verifier_ here. It needs to verify that the `name` passed by the client is in the `MERKLE_ROOT`. If it is, then we can send the gift! 
+The client has the responsibility to create a proof using the name, and make a request to the server for a gift. The server will take the proof to verify if the name is on the list, if it is the server will reply with the gift.
 
-## Utils
+### Quick Start 🏃‍♀️🏃
 
-There are a few files in utils:
+```bash
+git clone https://github.com/pacelliv/giftlist.git
+cd giftlist
+```
 
-- The `niceList.json` which contains all the names of the people who deserve a gift this year (this is randomly generated, feel free to add yourself and others to this list!)
-- The `example.js` script shows how we can generate a root, generate a proof and verify that some value is in the root using the proof. Try it out from the top-level folder with `node/example.js`
-- The `MerkleTree.js` should look familiar from the Merkle Tree module! This one has been modified so you should not have to deal with any crypto type conversion. You can import this in your client/server
-- The `verifyProof.js` should also look familiar. This was the last stage in the module. You can use this function to prove a name is in the merkle root, as show in the example.
+To install the dependencies, split your terminal and then run the following commands:
+
+```bash
+npm install
+```
+
+### Using the application 👩‍💻👨‍💻
+
+Start the server with:
+
+```bash
+npm start
+```
+
+In `client/index.js` set a name to verify if is on `niceList.json` and run `node client/index.js`, in the console you will see the result of your query.
+
+Try a name that is not on the list to see what you get.
+
+### Conclusion 👀
+
+Blockchains have a storage problem, they need to store large volumes on data and efficiently find any piece of data. Without data structures like Merkle Trees the process of finding data would be computational expensive and slow because we would have to loop through every single piece of data in order to find the one we're looking for.
+
+### Acknowledgements 🎉🎉
+
+Thanks to the [Alchemy University](https://www.alchemy.com/dapps/alchemy-university) team for making the Ethereum Bootcamp accessible to anyone who want to become a web3 engineer.

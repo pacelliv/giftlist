@@ -1,5 +1,5 @@
-const { keccak256 } = require('ethereum-cryptography/keccak');
-const { bytesToHex } = require('ethereum-cryptography/utils');
+const { keccak256 } = require("ethereum-cryptography/keccak");
+const { bytesToHex } = require("ethereum-cryptography/utils");
 
 class MerkleTree {
   constructor(leaves) {
@@ -8,7 +8,7 @@ class MerkleTree {
   }
 
   getRoot() {
-    return bytesToHex(this._getRoot(this.leaves));
+    return bytesToHex(this.#_getRoot(this.leaves));
   }
 
   getProof(index, layer = this.leaves, proof = []) {
@@ -37,15 +37,11 @@ class MerkleTree {
       }
     }
 
-    return this.getProof(
-      Math.floor(index / 2),
-      newLayer,
-      proof
-    );
+    return this.getProof(Math.floor(index / 2), newLayer, proof);
   }
 
-  // private function
-  _getRoot(leaves = this.leaves) {
+  // private function, prefixing methods and variables with `#` makes them private
+  #_getRoot(leaves = this.leaves) {
     if (leaves.length === 1) {
       return leaves[0];
     }
@@ -63,7 +59,7 @@ class MerkleTree {
       }
     }
 
-    return this._getRoot(layer);
+    return this.#_getRoot(layer);
   }
 }
 
